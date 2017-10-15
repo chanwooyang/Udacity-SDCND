@@ -19,26 +19,21 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/visualization.jpg "Visualization"
-[image2]: ./examples/grayscale.jpg "Grayscaling"
-[image3]: ./examples/random_noise.jpg "Random Noise"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
+[chart1]: ./writeup_images/chart1.png "Chart1"
+[chart2]: ./writeup_images/chart2.png "Chart2"
+[test_images]: ./writeup_images/six_test_images.png "6 Test Images"
+[six_test]: ./writeup_images/six_test_result.png "6 Test Images Result"
+[overall_test]: ./writeup_images/overall_test_result.png "Test Dataset Result"
 
 ## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
+### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
 
 ---
-###Writeup / README
+#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
+### Data Set Summary & Exploration
 
-###Data Set Summary & Exploration
-
-###1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
+#### 1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
 
 I used python built-in funciton 'len()' to get the number of each data sets:
 
@@ -50,18 +45,20 @@ I used python built-in funciton 'len()' to get the number of each data sets:
 
 I also included assert(len(feature) == len(label)) to ensure number of features and number of labels are the same in each dataset.
 
-####2. Include an exploratory visualization of the dataset.
+#### 2. Include an exploratory visualization of the dataset.
 
 Here is an exploratory visualization of the data set. The first bar chart shows the number of images by each dataset; The whole dataset is distributed to about 70% of training set, 10% of validation set, and 20% of test set. The dataset split is reasonable as the total number of image is ~52000 and this is considered relatively small dataset.
 
 
-![alt text][image1]
+![Number of Dataset by Type][chart1]
 
 Second bar chart shows the number of training images by each class/label. The chart shows that number of training images of some classes are small compared to other classes. Number of training images can be increased by introducing the data augmentation techniques.
 
-###Design and Test a Model Architecture
+![Number of Images by Class][chart2]
 
-###1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
+### Design and Test a Model Architecture
+
+#### 1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
 
 First, I decided not to grayscale dataset, but only normalize them. Compared to the MNIST data, this traffic sign dataset can be distinguished by not only its shape and pattern, but also its color. So, grayscaling dataset could lose significant information that can be trained by a model.
 
@@ -70,7 +67,7 @@ I used Min-Max Scaling to normalize dataset. This normalizing input helps to mak
 For the data augmentation, this is something that needs to be carefully processed. In this project context, data augmentation can mean the image distortion, like image rotation, change in color, introducing noises, etc. But, image rotation and change in color can introduce error in the training set. For example, if an ‘Ahead Only’ sign is rotated, then this can be looked the same with a ‘Keep Right’ or ‘Keep Left’ sign. Thus, in this project context, traffic sign images should not be rotated or changed in color, but they can only be distorted in such ways, like changing brightness, making blurry, etc.
 
 
-###2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
+#### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
 My final model consists of following layers:
 
@@ -91,11 +88,11 @@ I used Leaky ReLU activation with alpha = 0.15 instaed of normal ReLU on every c
 
 I also implemented Batch-Normalization in every layer. Like input normalization, batch-norm normalize the value by shifting the mean and by adjusting variance before they are fed into an activation function within every layer. This helps to train a model faster and yield a model with better performance.
 
-###3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
+#### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
 To train the model, I used an Adam Optimizer, which is an adaptive moment estimation and it combines RMS prop and Momentum techniques. I chose 512 Batch Size and 50 Epochs that are relatively higher because the final model is large and it needs to be trained longer. Learning rate value was set to 0.0005 and this was set after few trials of training.
 
-###4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
+#### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
 * training set accuracy of 100.00%
@@ -132,18 +129,17 @@ If a well known architecture was chosen:
 * How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
  
 
-###Test a Model on New Images
+### Test a Model on New Images
 
-###1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
+#### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
 These are six German traffic signs that I downloaded from 'benchmakr.ini.rub.de' web:
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+![6 Test Images][test_images]
 
 The second image could be difficult to classify as there is a noise in the image. And, the fourth and sixth images could be difficult to classify because the brightness is too low and they are even quite difficult for a human to classify.
 
-###2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
+#### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
 Here are the results of the prediction:
 
@@ -159,14 +155,17 @@ Here are the results of the prediction:
 
 The model was able to correctly guess all traffic signs, which gives an accuracy of 100%. 
 
-###3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
 For all images, the model is 100% sure about its predictions. 
 
+![6 Test Images Result][six_test]
 
 However, since only 6 images are not enough to correctly evaluate the trained model, test dataset was used to get the test accuracy of the trained model. The final model yielded 97.82% of test accuracy and I randomly chose and displayed 6 images with their softmax probability results.
 
+![Test Dataset Result][overall_test]
+
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
-####1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
+#### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
 
 
