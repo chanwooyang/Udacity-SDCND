@@ -90,13 +90,13 @@ I also implemented Batch-Normalization in every layer. Like input normalization,
 
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
-To train the model, I used an Adam Optimizer, which is an adaptive moment estimation and it combines RMS prop and Momentum techniques. I chose 512 Batch Size and 50 Epochs that are relatively higher because the final model is large and it needs to be trained longer. Learning rate value was set to 0.0005 and this was set after few trials of training.
+To train the model, I used an Adam Optimizer, which is an adaptive moment estimation and it combines RMS prop and Momentum techniques. For the Batch Size, I tried 128, 256, 512, and 1025, and Batch size of 512 yielded better result than others. Learning rate value was set to 0.0005 and this was set after few trials of training. For the Epoch, I initially tried with large number like 50 ~ 80 Epochs, but it was found that the validation accuracy was not significantly improved after about 30~40 Epochs. If the model is trained longer, though the accuracy does not increase, it could overfit the model. Thus, I implemented a couple of line of code that stop the training once the validation accuracy reaches higher than 98%. This saved processing time and promised optimal network.
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
 * training set accuracy of 100.00%
-* validation set accuracy of 98.32%
+* validation set accuracy of 98.12%
 * test set accuracy of 97.82%
 
 If an iterative approach was chosen:
