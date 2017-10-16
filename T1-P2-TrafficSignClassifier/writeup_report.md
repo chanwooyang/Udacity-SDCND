@@ -123,11 +123,11 @@ Batch size was tuned between 128 and 1024, and Epoch was tuned between 10 and 80
 
 * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
 
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
- 
+I believe implementing dropout and batch-normalization are important design choices. It is relatively easy to overcome the avoidable bias by either making the model bigger and/or training model longer, but overcoming the variance problem was bit tricky as it is required to use regularization techniques. 
+
+Overfitting, simply saying, comes from the model learning to much detail information of training dataset, so the model needs to be 'regulated' so that the impact of hidden units is reduced. So, the dropout technique zeroes out some of nodes in hidden layers and it regulates the model to reduce the impact of hidden units.
+
+Batch-normalizaition, as said above, works in the same concept of the input normalization. As a model gets trained, hidden layer weights and bias are changed, and outputs of an activation function of each layer are also changed. This means that the distribution of inputs to next layer, or in other words, their mean and variance are changed. This is so-called 'covariate shift'. Then, this covariate shift can lead input values to become either very small or very large, and this leads the gradient of the model to become flat or close to 0, and ultimately, it makes much harder for optimizer to train the model. Thus, the Batch-Normalization technique helps to prevent covariate shift by adjusting the mean and variance of input values before they are fed into an activation function of a layer. Many of academic papers have shown that Batch-Norm significantly increases the training speed and can yield higher accuracy of the model.
 
 ### Test a Model on New Images
 
