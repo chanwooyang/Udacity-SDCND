@@ -153,7 +153,7 @@ def datasetGenerator(imagePaths, measurements, validation_flag, BATCH_SIZE):
 				true_image = image
 				true_angle = angle 
  
-			if dice1 < 1.0 and len(X_train) < BATCH_SIZE:
+			if dice1 < 0.2 and len(X_train) < BATCH_SIZE:
 				true_image = preprocess(true_image)
 				X_train.append(true_image)
 				y_train.append(true_angle)
