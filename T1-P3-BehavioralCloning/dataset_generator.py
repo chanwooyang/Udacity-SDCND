@@ -119,7 +119,7 @@ def preprocess(image):
 	# Crop
 	crop_image = image[55:106, 0:320, :]
 	# Normalize
-	norm_image = (crop_image/128.0)-1.0
+	norm_image = (crop_image/255.0)-0.5
 	# Resize	
 	resize_image = cv2.resize(norm_image,(64,64),interpolation=cv2.INTER_AREA)
 	
@@ -139,12 +139,8 @@ def datasetGenerator(imagePaths, measurements, validation_flag, BATCH_SIZE):
 				else:
 					pass
 			image = cv2.cvtColor(raw_image, cv2.COLOR_BGR2RGB) # 'cv2.imread' reads images as BGR
+			image = raw_image
 			angle = angles[i]
-
-			# print(np.shape(resize_image))
-
-			# X_train.append(image)
-			# y_train.append(angle)
 
 			dice1 = np.random.rand()
 			dice2 = np.random.rand()
@@ -156,8 +152,8 @@ def datasetGenerator(imagePaths, measurements, validation_flag, BATCH_SIZE):
 			else:
 				true_image = image
 				true_angle = angle 
-
-			if dice1 < 0.2 and len(X_train) < BATCH_SIZE:
+ 
+			if dice1 < 1.0 and len(X_train) < BATCH_SIZE:
 				true_image = preprocess(true_image)
 				X_train.append(true_image)
 				y_train.append(true_angle)
@@ -205,37 +201,6 @@ def datasetGenerator(imagePaths, measurements, validation_flag, BATCH_SIZE):
 				# print('trans')
 				# cv2.imshow('flipImage',trans_image)
 				# cv2.waitKey(0)
-
-			# 	# Validation set should be in the same distribution with the test set
-			# 	if not validation_flag:
-			# 		if len(X_train) < BATCH_SIZE:
-			# 			blur_image, blur_angle = blurImage(image, angle)
-			# 			X_train.append(blur_image)
-			# 			y_train.append(blur_angle)
-			# 		if len(X_train) < BATCH_SIZE:
-			# 			blur_flip_image, blur_flip_angle = blurImage(flip_image, flip_angle)
-			# 			X_train.append(blur_flip_image)
-			# 			y_train.append(blur_flip_angle)
-			# 		if len(X_train) < BATCH_SIZE:
-			# 			bright_image, bright_angle = changeBrightness(image, angle)
-			# 			X_train.append(bright_image)
-			# 			y_train.append(bright_angle)
-			# 		if len(X_train) < BATCH_SIZE:
-			# 			bright_flip_image, bright_flip_angle = changeBrightness(flip_image, flip_angle)
-			# 			X_train.append(bright_flip_image)
-			# 			y_train.append(bright_flip_angle)
-
-			# else:			
-			# 	# Validation set should be in the same distribution with the test set
-			# 	if not validation_flag:
-			# 		if len(X_train) < BATCH_SIZE:
-			# 			blur_image, blur_angle = blurImage(image, angle)
-			# 			X_train.append(blur_image)
-			# 			y_train.append(blur_angle)
-			# 		if len(X_train) < BATCH_SIZE:
-			# 			bright_image, bright_angle = changeBrightness(image, angle)
-			# 			X_train.append(bright_image)
-			# 			y_train.append(bright_angle)
 
 			if len(X_train) == BATCH_SIZE:
 				assert(len(X_train) == len(y_train))
