@@ -9,13 +9,13 @@ import os
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
-BATHC_SIZE = 512
-# image_shape = (160, 320, 3)
+BATHC_SIZE = 128
 
 # Generate Dataset
 data_lines = getImagePath()
 
 image_set, measurement_set = collectData(data_lines)
+image_set, measurement_set = trimData(image_set, measurement_set)
 image_set, measurement_set = sklearn.utils.shuffle(image_set, measurement_set)
 
 # train_image_path, valid_image_path, train_angle, valid_angle = train_test_split(image_set,measurement_set, test_size = 0.2)
@@ -36,78 +36,86 @@ else:
 	# Build Network
 	model = Sequential()
 
+	model.add(Lambda(lambda x: x/255.0 - 0.5, input_shape=(160,320,3)))
+	model.add(Cropping2D(cropping=((55,25),(0,0))))
+
+	model.add(Convolution2D(1,1,1, border_mode='same', init='glorot_uniform'))
 	# Convolutional Layer 1
-	model.add(Convolution2D(24,5,5, subsample=(2,2), input_shape=(64,64,3)))
+	model.add(Convolution2D(24,5,5, subsample=(2,2), init='glorot_uniform'))
 	# model.add(BatchNormalization())
 	model.add(Activation('elu'))
-	# model.add(MaxPooling2D((2,2), strides=(1,1)))
-	model.add(Dropout(0.8))
+	# model.add(MaxPooling2D((2,2), strides=(2,2), border_mode='same'))
+	# model.add(Dropout(0.8))
 
 	# Convolutional Layer 2
-	model.add(Convolution2D(32,5,5, subsample=(2,2)))
+	model.add(Convolution2D(36,5,5, subsample=(2,2), init='glorot_uniform'))
 	# model.add(BatchNormalization())
 	model.add(Activation('elu'))
-	# model.add(MaxPooling2D((2,2), strides=(1,1)))
-	model.add(Dropout(0.5))
+	# model.add(MaxPooling2D((2,2), strides=(2,2), border_mode='same'))
+	# model.add(Dropout(0.5))
 
 	# Convolutional Layer 3
-	model.add(Convolution2D(48,5,5, subsample=(2,2)))
+	model.add(Convolution2D(48,3,3, subsample=(2,2), init='glorot_uniform'))
 	# model.add(BatchNormalization())
 	model.add(Activation('elu'))
-	# model.add(MaxPooling2D((2,2), strides=(1,1)))
-	model.add(Dropout(0.5))
+	# model.add(MaxPooling2D((2,2), strides=(1,1), border_mode='same'))
+	# model.add(Dropout(0.5))
 
 	# Convolutional Layer 4
-	model.add(Convolution2D(64,3,3, subsample=(1,1)))
+	model.add(Convolution2D(64,3,3, subsample=(1,1), init='glorot_uniform'))
 	# model.add(BatchNormalization())
 	model.add(Activation('elu'))
-	# model.add(MaxPooling2D((2,2), strides=(2,2)))
-	model.add(Dropout(0.2))
+	# model.add(MaxPooling2D((2,2), strides=(1,1), border_mode='same'))
+	# model.add(Dropout(0.5))
 
 	# Convolutional Layer 5
-	model.add(Convolution2D(64,3,3, subsample=(1,1)))
+	model.add(Convolution2D(64,3,3, subsample=(1,1), init='glorot_uniform'))
 	# model.add(BatchNormalization())
 	model.add(Activation('elu'))
-	# model.add(MaxPooling2D((2,2), strides=(1,1)))
-	model.add(Dropout(0.2))
+	# model.add(MaxPooling2D((2,2), strides=(1,1), border_mode='same'))
+	# model.add(Dropout(0.2))
 
 	# Flat Layer
 	model.add(Flatten())
-
+ 
 	# Fully Connected Layer 1
-	model.add(Dense(100))
+
+	model.add(Dense(100, init='glorot_uniform'))
 	# model.add(BatchNormalization())
 	model.add(Activation('elu'))
 	model.add(Dropout(0.2))
 
 	# Fully Connected Layer 2
-	model.add(Dense(50))
+	model.add(Dense(50, init='glorot_uniform'))
 	# model.add(BatchNormalization())
 	model.add(Activation('elu'))
 	model.add(Dropout(0.2))
 
 	# Fully Connected Layer 3
-	model.add(Dense(10))
+	# model.add(Dropout(0.5))
+	model.add(Dense(10, init='glorot_uniform'))
 	# model.add(BatchNormalization())
 	model.add(Activation('elu'))
-	# model.add(Dropout(0.5))
 
 	# Output Layer
 	model.add(Dense(1))
 
-adam_op = optimizers.Adam(lr=0.00008)
-model.compile(loss='mse', optimizer=adam_op)
-history_object = model.fit_generator(training_data, samples_per_epoch=((len(train_image_path)//BATHC_SIZE)*BATHC_SIZE),
-validation_data=validation_data, nb_val_samples=len(valid_image_path), nb_epoch=8)
+EPOCH = 8
 
-model.save('model.h5')
+for i in range(EPOCH):
+	# adam_op = optimizers.Adam(lr=0.00005)
+	model.compile(loss='mse', optimizer='adam')
+	history_object = model.fit_generator(training_data, samples_per_epoch=((len(train_image_path)//BATHC_SIZE)*BATHC_SIZE),
+	validation_data=validation_data, nb_val_samples=len(valid_image_path), nb_epoch=1)
 
-print(history_object.history.keys())
+	model.save('model_'+str(i)+'.h5')
 
-plt.plot(history_object.history['loss'])
-plt.plot(history_object.history['val_loss'])
-plt.title('Model MSE Loss')
-plt.ylabel('MSE Loss')
-plt.xlabel('Epoch')
-plt.legend(['traning set', 'validation set'], loc='upper right')
-plt.show()
+# print(history_object.history.keys())
+
+# plt.plot(history_object.history['loss'])
+# plt.plot(history_object.history['val_loss'])
+# plt.title('Model MSE Loss')
+# plt.ylabel('MSE Loss')
+# plt.xlabel('Epoch')
+# plt.legend(['traning set', 'validation set'], loc='upper right')
+# plt.show()
