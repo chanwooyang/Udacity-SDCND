@@ -1,7 +1,6 @@
 from keras.models import Sequential, load_model, Model
 from keras.layers import Lambda, Cropping2D, Flatten, Dense, Convolution2D, BatchNormalization, Activation, Dropout, MaxPooling2D
 from keras import metrics, initializations, optimizers
-from keras.regularizers import l2
 
 from dataset_generator import *
 import numpy as np

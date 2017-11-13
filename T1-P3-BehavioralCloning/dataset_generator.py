@@ -83,7 +83,7 @@ def collectData(dataLines):
 	imagePaths = []
 	measurements = []
 
-	keep_prob = 0.2
+	keep_prob = 0.4
 	correction_factor = 0.25
 
 	for dataLine in dataLines:
@@ -115,16 +115,30 @@ def collectData(dataLines):
 
 	return imagePaths, measurements
 
-def preprocess(image):
-	# Crop
-	crop_image = image[55:106, 0:320, :]
-	# Normalize
-	norm_image = (crop_image/255.0)-0.5
-	# Resize	
-	resize_image = cv2.resize(norm_image,(64,64),interpolation=cv2.INTER_AREA)
-	
-	return resize_image
+def trimData(imagePaths, measurements):
 
+	num_bins = 100
+	hist, bins = np.histogram(measurements, num_bins)
+	keep_prob=[]
+	target = np.max(hist)*0.5
+	for i in range(num_bins):
+		if hist[i] < target:
+			keep_prob.append(1.)
+		else:
+			keep_prob.append(target/hist[i])
+
+	remove_list = []
+	for i, angle in enumerate(measurements):
+		for j in range(num_bins):
+			if angle > bins[j] and angle <= bins[j+1]:
+				if np.random.rand() > keep_prob[j]:
+					remove_list.append(i)
+	imagePaths = np.delete(imagePaths, remove_list)
+	measurements = np.delete(measurements, remove_list)
+
+	assert(len(imagePaths) == len(measurements))
+
+	return imagePaths, measurements
 
 def datasetGenerator(imagePaths, measurements, validation_flag, BATCH_SIZE):
 
@@ -139,7 +153,6 @@ def datasetGenerator(imagePaths, measurements, validation_flag, BATCH_SIZE):
 				else:
 					pass
 			image = cv2.cvtColor(raw_image, cv2.COLOR_BGR2RGB) # 'cv2.imread' reads images as BGR
-			image = raw_image
 			angle = angles[i]
 
 			dice1 = np.random.rand()
@@ -153,8 +166,7 @@ def datasetGenerator(imagePaths, measurements, validation_flag, BATCH_SIZE):
 				true_image = image
 				true_angle = angle 
  
-			if dice1 < 0.2 and len(X_train) < BATCH_SIZE:
-				true_image = preprocess(true_image)
+			if dice1 < 0.2and len(X_train) < BATCH_SIZE:
 				X_train.append(true_image)
 				y_train.append(true_angle)
 
@@ -162,9 +174,8 @@ def datasetGenerator(imagePaths, measurements, validation_flag, BATCH_SIZE):
 				# cv2.imshow('flipImage',true_image)
 				# cv2.waitKey(0)
 
-			elif dice1 >=0.2 and dice1 < 0.40 and len(X_train) < BATCH_SIZE:
+			elif dice1 >=0.2 and dice1 < 0.4 and len(X_train) < BATCH_SIZE:
 				blur_image, blur_angle = blurImage(true_image, true_angle)
-				blur_image = preprocess(blur_image)
 				X_train.append(blur_image)
 				y_train.append(blur_angle)
 
@@ -172,9 +183,8 @@ def datasetGenerator(imagePaths, measurements, validation_flag, BATCH_SIZE):
 				# cv2.imshow('flipImage',blur_image)
 				# cv2.waitKey(0)
 
-			elif dice1 >=0.40 and dice1 < 0.6 and len(X_train) < BATCH_SIZE:
+			elif dice1 >=0.4 and dice1 < 0.6 and len(X_train) < BATCH_SIZE:
 				bright_image, bright_angle = changeBrightness(true_image, true_angle)
-				bright_image = preprocess(bright_image)
 				X_train.append(bright_image)
 				y_train.append(bright_angle)
 
@@ -184,7 +194,6 @@ def datasetGenerator(imagePaths, measurements, validation_flag, BATCH_SIZE):
 
 			elif dice1 >=0.6 and dice1 < 0.8 and len(X_train) < BATCH_SIZE:
 				shadow_image, shadow_angle = shadowImage(true_image, true_angle)
-				shadow_image = preprocess(shadow_image)
 				X_train.append(shadow_image)
 				y_train.append(shadow_angle)				
 
@@ -194,7 +203,6 @@ def datasetGenerator(imagePaths, measurements, validation_flag, BATCH_SIZE):
 
 			elif dice1 >= 0.8 and dice1 < 1.0 and len(X_train) < BATCH_SIZE:
 				trans_image, trans_angle = translateImage(true_image, true_angle, 80)
-				trans_image = preprocess(trans_image)
 				X_train.append(trans_image)
 				y_train.append(trans_angle)				
 		
@@ -207,4 +215,3 @@ def datasetGenerator(imagePaths, measurements, validation_flag, BATCH_SIZE):
 				yield sklearn.utils.shuffle(np.array(X_train),np.array(y_train))
 				X_train = []
 				y_train = []
-				image_paths, angles = sklearn.utils.shuffle(imagePaths, measurements)
