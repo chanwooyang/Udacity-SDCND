@@ -156,4 +156,8 @@ All these data augmentations were randomly applied to an image within the dataGe
 
 In this project, 'generator' was used to prevent the memory issue. Since there are few hundred thousands image data for training, it is almost impossible to store all dataset in memory. So rather, by using Python 'generator', 'Batch Size'-sized dataset can be generated on the fly. Within the 'generator', an image is loaded and data augmentation is randomly applied by rolling a dice.
 
-Lastly, these data were randomly shuffled and were splited into 70% of training set and 30% of validation set. The validation set was used to indicate whether the model was overfitting or underfitting.
+Lastly, these data were randomly shuffled and were splited into 80% of training set and 30% of validation set. The validation set was used to indicate whether the model was overfitting or underfitting.
+
+#### 5. Training Model
+
+Trained model was saved every Epoch. Training was done for 8 Epoch and each of saved model was tested in the simulator. It was found that after 3 Epoch, all trained model performed well in track1, but the trained model at Epoch 5 (model_4.h5) was the best performing model. Test videos were created at different speed: 10 mph, 20 mph, and 30 mph.
