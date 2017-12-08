@@ -63,7 +63,7 @@ The goals / steps of this project are the following:
 [image9]: ./output_images/HLSBinary.png "HLSBinary"
 [image10]: ./output_images/CombinedBinary.png "CombinedBinary"
 [image11]: ./output_images/slidingWindowLaneSearch.png "slidingWindowLaneSearch"
-[image12]: ./output_images/prevFameLaneSearch.png "prevFameLaneSearch"
+[image12]: ./output_images/prevFrameLaneSearch.png "prevFrameLaneSearch"
 [image13]: ./output_images/Equation.png "Equation"
 [image14]: ./output_images/pipeline_image.png "pipeline_image"
 
