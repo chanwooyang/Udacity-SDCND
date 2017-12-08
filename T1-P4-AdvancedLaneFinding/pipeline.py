@@ -117,7 +117,7 @@ Right = Line()
 # # path = 'test_images/straight_lines2.jpg'
 # path = 'test_images/test3.jpg'
 # image = cv2.imread(path)
-# output = process_image(image)
+# output = process_image(cv2.cvtColor(image,cv2.COLOR_BGR2RGB))
 # plt.imshow(output)
 # plt.show()
 

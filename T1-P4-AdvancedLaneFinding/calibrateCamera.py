@@ -72,9 +72,6 @@ def perspectiveTransform(undist_image):
 		[offset_x, offset_y],[img_size[0]-offset_x, offset_y]])
 	# print(dst)
 
-	# Draw Lines
-	# drawLines(undist_image, src)
-
 	# Tranform Matrix
 	M = cv2.getPerspectiveTransform(src,dst)
 	# Inverse Transform Matrix
