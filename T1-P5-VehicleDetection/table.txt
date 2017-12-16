@@ -1,0 +1,19 @@
+CSPACE	CAR_FEAT_TIME	NONCAR_FEAT_TIME	TRAIN_TIMES		VC_ACC
+RGB		93.55			90.12				35.61			0.9778
+LUV		94.95			91.46				10.68			0.9885
+HSV		94.99			92.51				32.88			0.9882
+YUV		93.21			89.83				28.31			0.9899
+HLS		94.83			92.98				35.74			0.9842
+YCrCb	100.05			97.71				32.59			0.9873
+
+
+orient = 11		pixel_per_cell=8
+YUV		99.29			95.69				35.69			0.9862
+orient = 11		pixel_per_cell=16
+YUV		49.66			46.51				12.07			0.9865
+orient = 9		pixel_per_cell=16
+YUV		48.18			46.59				12.56			0.9885
+orient = 9		pixel_per_cell=32
+YUV		36.17			33.15				11.81			0.9780
+
+
