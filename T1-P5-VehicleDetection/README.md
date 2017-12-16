@@ -227,7 +227,7 @@ Here's an example result showing the heatmap from test images, the result of `sc
 
 #### 1. Provide a link to your final video output.
 A project video was fed to the pipeline frame by frame, and it produced a vehicle detected video with few false positives.
-Here's a [link to my video result](./test_videos_output/processed_project_video.mp4.mp4)
+Here's a [link to my video result](./test_videos_output/processed_project_video.mp4)
 
 ---
 
