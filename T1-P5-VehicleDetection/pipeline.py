@@ -63,9 +63,6 @@ def process_image(image):
 if not os.path.exists('test_videos_output/'):
     os.makedirs('test_videos_output/')
 video_output1= 'test_videos_output/processed_project_video.mp4'
-# video_output2 = 'test_videos_output/processed_challenge_video.mp4'
 clip1 = VideoFileClip("project_video.mp4")
-# clip2 = VideoFileClip("challenge_video.mp4")
-video_process = clip1.fl_image(process_image) #NOTE: this function expects color images!!
-# %time white_clip.write_videofile(white_output, audio=False)
+video_process = clip1.fl_image(process_image)
 video_process.write_videofile(video_output1, audio=False)
