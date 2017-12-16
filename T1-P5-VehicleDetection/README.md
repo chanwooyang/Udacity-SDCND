@@ -119,13 +119,9 @@ The generated training and test sets were used to train a classifier. However, t
 
 So, as a first step, the parameters were set to the follow:
 
-
-|:-------------:|:---------:|
-|pix_per_cell 	|	8		|
-|cell_per_block	|	2		|
-|orient 		|	9		|
-|hog_channel 	|	'All'	|
-|spatial_size	|	(32, 32)|
+|pixel_per_cel 	|cell_per_block 	|orient 	|hog_channel 	|spatial_size 	|
+|:-------------:|:-----------------:|:---------:|:-------------:|:-------------:|
+|8				|2					|9			|'All'			|(32,32)		|
 
 Then, different datasets were generated with different colorspace and the classifier was trained. Results were the follow:
 
@@ -151,14 +147,9 @@ Then, color space was set to 'YUV', and other parameters were tuned for better a
 
 It was found that when 'pixel_per_cell' was set to 16 and 'orient' was set to 9, then feature extracting times were half of what it initially took and the classifier accuracy was almost the same. Therefore, feature extracting parameters were chosen as follow:
 
-|:-------------:|:---------:|
-|colorspace		|	'YUV'	|
-|pix_per_cell 	|	16		|
-|cell_per_block	|	2		|
-|orient 		|	9		|
-|hog_channel 	|	'All'	|
-|spatial_size	|	(32, 32)|
-
+|colorspace 	|pixel_per_cel 	|cell_per_block 	|orient 	|hog_channel 	|spatial_size 	|
+|:-------------:|:-------------:|:-----------------:|:---------:|:-------------:|:-------------:|
+|'YUV'			|16				|2					|9			|'All'			|(32,32)		|
 
 
 ### Sliding Window Search
