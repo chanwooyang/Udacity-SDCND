@@ -5,6 +5,8 @@ from classifier import *
 
 import cv2
 from scipy.ndimage.measurements import label
+from collections import deque
+
 # import imageio
 # imageio.plugins.ffmpeg.download()
 from moviepy.editor import VideoFileClip
@@ -32,6 +34,11 @@ X_train,X_test,y_train,y_test,X_scaler = dataset_split(car_image_paths,noncar_im
 # Train Linear SVC
 svc = linearSVC_Classifier(X_train,y_train,X_test,y_test)
 
+
+# store heatmap from few previous frames
+n_frames = 8
+accum_heatmap = deque(maxlen=n_frames)
+
 def process_image(image):
 	span_ratio1,span_ratio2,span_ratio3,span_ratio4 = 1.25,1.25,1,1
 	wsize1,wsize2,wsize3,wsize4 = 64, 128, 192, 256
@@ -53,9 +60,12 @@ def process_image(image):
 
 	heatmap = np.zeros_like(image[:,:,0]).astype(np.float)
 	heatmap = add_heat(heatmap,hot_windows)
-	heatmap = apply_threshold(heatmap,3)
-	# heatmap = np.clip(heat,0,255)
-	labels = label(heatmap)
+	accum_heatmap.append(heatmap)
+	# Get average heatmap of last few frames
+	overall_heatmap = np.sum(accum_heatmap,axis=0)/n_frames
+	# Apply threshold to the average heatmap
+	overall_heatmap = apply_threshold(overall_heatmap,4)
+	labels = label(overall_heatmap)
 	window_image = draw_labeled_boxes(np.copy(image),labels)
 
 	return window_image
