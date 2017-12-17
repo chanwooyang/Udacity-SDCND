@@ -85,7 +85,7 @@ The goals / steps of this project are the following:
 
 ### Histogram of Oriented Gradients (HOG)
 
-#### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
+#### 1. Explain how you extracted HOG features from the training images.
 
 The code for this step is in `data_collect.py` and `feature_extraction.py` files.
 
@@ -104,7 +104,7 @@ Then, these feature extracting functions were combined in `extract_features()` f
 
 Once the feature extracting functions were implemented, they were used with given car & non-car image data to generate training and test dataset. In `dataset_split()` function, above functions were used to extract features of given image dataset, and they were splitted into training and test dataset using `sklearn.model_selection.train_test_split` with 8:2 ratio. These splitted data sets were saved as pickle file for easier access later.
 
-#### 2. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+#### 2. Describe how you trained a classifier using your selected HOG features (and color features if you used them).
 
 The code for this step is in `classifier.py` file.
 
@@ -154,7 +154,7 @@ It was found that when 'pixel_per_cell' was set to 16 and 'orient' was set to 9,
 
 ### Sliding Window Search
 
-#### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+#### 1. Describe how you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
 The code for this step is in `window_search.py` file.
 
@@ -182,11 +182,13 @@ Following images are test image examples processed by the pipeline.
 ![test image pipeline5 example][image12]
 ![test image pipeline6 example][image13]
 
-#### 3. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+#### 3. Describe how you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
 The code for this step is in `pipeline.py` and `window_search.py` files.
 
-The generated car-detected boxes were saved, and theses were used to create a heatmap. Then, a threshold was applied on the heatmap to identify correct vehicle positions and minimize false positives. This threshold value was fine-tuned to get a result with the best vehicle detection performance and minimal false positives at the same time Then, `scipy.ndimage.measurements.label()` was used to identify individual boxes in the heatmap and these were assumed to be detected vehicle positions. Lastly, `draw_labeled_boxes` function was used to construct bounding boxes around the identified individual blobs.
+The generated car-detected boxes were saved, and theses were used to create a heatmap. Also, by using `collections.deque`, heatmap of last few video frames were stored and they got averaged. This helped minimizing the noises in the box size change and also helped rejecting false positives.
+
+Then, a threshold was applied on the averaged heatmap to identify correct vehicle positions and minimize false positives. This threshold value was fine-tuned to get a result with the best vehicle detection performance and minimal false positives at the same time Then, `scipy.ndimage.measurements.label()` was used to identify individual boxes in the heatmap and these were assumed to be detected vehicle positions. Lastly, `draw_labeled_boxes` function was used to construct bounding boxes around the identified individual blobs.
 
 Here's an example result showing the heatmap from test images, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
 
